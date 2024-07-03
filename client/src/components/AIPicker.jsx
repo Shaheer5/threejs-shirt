@@ -6,7 +6,7 @@ const AIPicker = ({ prompt, setPrompt, generatingImg, handleSubmit }) => {
   return (
     <div className="aipicker-container">
       <textarea
-        className="aipicker-textarea"
+        className="aipicker-textarea !bg-white"
         placeholder="Ask AI..."
         rows={5}
         value={prompt}
@@ -25,7 +25,7 @@ const AIPicker = ({ prompt, setPrompt, generatingImg, handleSubmit }) => {
               type={"outline"}
               title={"AI Logo"}
               handleClick={() => handleSubmit("logo")}
-              customStyles={"text-xs"}
+              customStyles={"text-xs bg-white"}
             />
             <CustomButton
               type={"filled"}

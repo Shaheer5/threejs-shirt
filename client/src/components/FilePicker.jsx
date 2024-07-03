@@ -2,15 +2,8 @@ import React from "react";
 import CustomButton from "./CustomButton";
 import { getContrastingColor } from "../config/helpers";
 import { useSnapshot } from "valtio";
-import state from "../store";
 
 const FilePicker = ({ file, setFile, readFile }) => {
-  const snap = useSnapshot(state);
-  const generateStyle = () => {
-    return {
-      color: getContrastingColor(snap.color),
-    };
-  };
   return (
     <div className="filepicker-container">
       <div className="flex flex-1 flex-col">
@@ -22,14 +15,12 @@ const FilePicker = ({ file, setFile, readFile }) => {
         />
         <label
           htmlFor="file-upload"
-          className="filepicker-label"
-          style={generateStyle()}
+          className="filepicker-label to-black"
         >
           Upload file
         </label>
         <p
-          className="mt-2 text-gray-500 text-xs truncate"
-          style={generateStyle()}
+          className="mt-2 text-gray-500 text-xs truncate to-black"
         >
           {file ? file.name : "No file selected"}
         </p>

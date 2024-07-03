@@ -20,9 +20,9 @@ const Home = () => {
         <motion.section className="home" {...slideAnimation("left")}>
           <motion.header {...slideAnimation("down")}>
             <img
-              src="./threejs.png"
+              src="./sm+threejs.png"
               alt="logo"
-              className="w-8 h-8 object-contain"
+              className="sm:w-44 sm:h-28 w-28 h-14 object-contain"
             />
           </motion.header>
           <motion.div className="home-content" {...headContainerAnimation}>
