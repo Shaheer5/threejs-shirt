@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSnapshot } from "valtio";
 
-import config from "../config/config";
 import state from "../store";
 import { download, logoShirt, stylishShirt } from "../assets";
 import { downloadCanvasToImage, reader } from "../config/helpers";
@@ -15,6 +14,7 @@ import {
   FilePicker,
   Tab,
 } from "../components";
+import config from "../config/config";
 
 const Customizer = () => {
   const snap = useSnapshot(state);
@@ -74,7 +74,11 @@ const Customizer = () => {
       });
 
       const data = await response.json();
-      handleDecals(type, `data:image/png;base64,${data.photo}`);
+      if (data.photo) {
+        handleDecals(type, `data:image/png;base64,${data.photo}`);
+      } else {
+        throw new Error("Image data not found in response");
+      }
     } catch (error) {
       alert(error.message);
     } finally {
