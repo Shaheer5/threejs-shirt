@@ -1,5 +1,3 @@
-import React from "react";
-
 import CustomButton from "./CustomButton";
 
 const AIPicker = ({ prompt, setPrompt, generatingImg, handleSubmit }) => {
@@ -25,13 +23,13 @@ const AIPicker = ({ prompt, setPrompt, generatingImg, handleSubmit }) => {
               type={"outline"}
               title={"AI Logo"}
               handleClick={() => handleSubmit("logo")}
-              customStyles={"text-xs bg-white"}
+              customStyles={"text-xs bg-white py-1"}
             />
             <CustomButton
               type={"filled"}
               title={"AI Full"}
               handleClick={() => handleSubmit("full")}
-              customStyles={"text-xs"}
+              customStyles={"text-xs py-1"}
             />
           </>
         )}

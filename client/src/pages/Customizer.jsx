@@ -126,7 +126,12 @@ const Customizer = () => {
   const readFile = (type) => {
     reader(file).then((result) => {
       handleDecals(type, result);
-      setActiveFilterTab("");
+
+      if (type === "logo") {
+        state.isLogoTexture = true;
+      } else {
+        state.isFullTexture = true;
+      }
     });
   };
 
