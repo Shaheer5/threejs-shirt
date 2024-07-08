@@ -8,7 +8,16 @@ const router = express.Router();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  organization: "org-BjFHkA24eWNZMCw9tCGApMxj",
+  project: process.env.OPENAI_PROJECT_ID,
 });
+
+// async function main() {
+//   const image = await openai.images.generate({ model: "dall-e-3", prompt: "A cute baby sea otter" });
+
+//   console.log(image.data);
+// }
+// main();
 
 router.route("/").get((req, res) => {
   res.status(200).json({ message: "Hello from DALL-E routes" });
