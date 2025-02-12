@@ -7,14 +7,7 @@ import { download } from "../assets";
 import { downloadCanvasToImage, reader } from "../config/helpers";
 import { EditorTabs, FilterTabs, DecalTypes } from "../config/constants";
 import { fadeAnimation, slideAnimation } from "../config/motion";
-import {
-  CustomButton,
-  AIPicker,
-  ColorPicker,
-  FilePicker,
-  Tab,
-} from "../components";
-import config from "../config/config";
+import { CustomButton, AIPicker, ColorPicker, FilePicker, Tab } from "../components";
 
 const Customizer = () => {
   const snap = useSnapshot(state);
@@ -45,12 +38,7 @@ const Customizer = () => {
         return <FilePicker file={file} setFile={setFile} readFile={readFile} />;
       case "aipicker":
         return (
-          <AIPicker
-            prompt={prompt}
-            setPrompt={setPrompt}
-            generatingImg={generatingImg}
-            handleSubmit={handleSubmit}
-          />
+          <AIPicker prompt={prompt} setPrompt={setPrompt} generatingImg={generatingImg} handleSubmit={handleSubmit} />
         );
       default:
         return null;
@@ -63,25 +51,34 @@ const Customizer = () => {
 
     try {
       setGeneratingImg(true);
-      const response = await fetch(`${config.development.backendUrl}`, {
+
+      const response = await fetch("https://api.edenai.run/v2/image/generation", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: `Bearer ${import.meta.env.VITE_EDENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          prompt,
+          response_as_dict: true,
+          attributes_as_list: false,
+          show_base_64: true,
+          show_original_response: false,
+          num_images: 1,
+          // providers: 'stabilityai,replicate,openai,amazon,leonardo',
+          providers: "stabilityai",
+          text: prompt,
+          resolution: "512x512",
         }),
       });
 
       const data = await response.json();
-      if (data.photo) {
-        handleDecals(type, `data:image/png;base64,${data.photo}`);
-      } else {
-        throw new Error("Image data not found in response");
-      }
+
+      console.log(data.stabilityai.items[0].image);
+
+      handleDecals(type, `data:image/png;base64,${data.stabilityai.items[0].image}`);
     } catch (error) {
-      alert(error.message);
+      alert(error);
     } finally {
       setGeneratingImg(false);
       setActiveEditorTab("");
@@ -140,28 +137,17 @@ const Customizer = () => {
     <AnimatePresence>
       {!snap.intro && (
         <>
-          <motion.div
-            className="absolute top-0 left-0 z-10"
-            {...slideAnimation("left")}
-            key="custom"
-          >
+          <motion.div className="absolute top-0 left-0 z-10" {...slideAnimation("left")} key="custom">
             <div className="flex items-center min-h-screen">
               <div className="editortabs-container tabs">
                 {EditorTabs.map((tab) => (
-                  <Tab
-                    key={tab.name}
-                    tab={tab}
-                    handleClick={() => handleClick(tab.name)}
-                  />
+                  <Tab key={tab.name} tab={tab} handleClick={() => handleClick(tab.name)} />
                 ))}
                 {generateTabContent()}
               </div>
             </div>
           </motion.div>
-          <motion.div
-            className="absolute z-10 top-5 right-5"
-            {...fadeAnimation}
-          >
+          <motion.div className="absolute z-10 top-5 right-5" {...fadeAnimation}>
             <CustomButton
               type={"filled"}
               title={"Go Back"}
@@ -169,10 +155,7 @@ const Customizer = () => {
               handleClick={() => (state.intro = true)}
             />
           </motion.div>
-          <motion.div
-            className="filtertabs-container"
-            {...slideAnimation("up")}
-          >
+          <motion.div className="filtertabs-container" {...slideAnimation("up")}>
             {FilterTabs.map((tab) => (
               <Tab
                 key={tab.name}
@@ -183,11 +166,7 @@ const Customizer = () => {
               />
             ))}
             <button className="download-btn" onClick={downloadCanvasToImage}>
-              <img
-                src={download}
-                alt="download_image"
-                className="w-3/5 h-3/5 object-contain"
-              />
+              <img src={download} alt="download_image" className="w-3/5 h-3/5 object-contain" />
             </button>
           </motion.div>
         </>
